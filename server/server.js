@@ -8,9 +8,11 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: "*", // change to frontend URL later for security
+}));
 
+app.use(express.json());
 
 // Routes
 app.use("/api/auth", require("./routes/authRoutes"));
@@ -19,20 +21,16 @@ app.use("/api/pay", require("./routes/paymentRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 
-
-
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Server is running successfully 🚀" });
 });
 
-// MongoDB
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+// MongoDB Connection
+if (!mongoose.connection.readyState) {
+  mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log(err));
+}
 
-// Server
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
+// 🔥 IMPORTANT: DO NOT USE app.listen() IN VERCEL
+module.exports = app;
