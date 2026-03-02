@@ -21,7 +21,9 @@ app.use("/api/orders", require("./routes/orderRoutes"));
 
 
 
-
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Server is running successfully 🚀" });
+});
 
 // MongoDB
 mongoose.connect(process.env.MONGO_URI)
