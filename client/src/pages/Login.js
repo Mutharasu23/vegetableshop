@@ -4,8 +4,9 @@ import "./auth.css";
 
 const API = process.env.REACT_APP_BACKEND_URI;
 
-function Login() {
+function Register() {
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -13,24 +14,32 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        `${API}/api/auth/login`,
-        { email, password }
+      await axios.post(
+        `${API}/api/auth/register`,
+        {
+          name,
+          email,
+          password
+        }
       );
 
-      localStorage.setItem("token", res.data.token);
-      alert("Login Success");
-      window.location = "/home";
+      alert("Registered Successfully");
+      window.location = "/";
 
     } catch (err) {
-      alert(err.response?.data || "Login failed");
+      alert(err.response?.data || "Registration failed");
     }
   };
 
   return (
     <div className="auth-container">
       <form onSubmit={handleSubmit} className="auth-box">
-        <h2>Login</h2>
+        <h2>Register</h2>
+
+        <input
+          placeholder="Name"
+          onChange={e => setName(e.target.value)}
+        />
 
         <input
           type="email"
@@ -44,12 +53,12 @@ function Login() {
           onChange={e => setPassword(e.target.value)}
         />
 
-        <button>Login</button>
+        <button>Register</button>
 
-        <p>New user? <a href="/register">Register</a></p>
+        <p>Already have account? <a href="/">Login</a></p>
       </form>
     </div>
   );
 }
 
-export default Login;
+export default Register;
