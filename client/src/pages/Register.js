@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./auth.css";
 
+const API = process.env.REACT_APP_BACKEND_URI;
+
 function Register() {
 
   const [name, setName] = useState("");
@@ -12,25 +14,26 @@ function Register() {
     e.preventDefault();
 
     try {
-      await axios.post("/api/auth/register", {
-        name,
-        email,
-        password
-      });
+      await axios.post(
+        `${API}/api/auth/register`,
+        {
+          name,
+          email,
+          password
+        }
+      );
 
       alert("Registered Successfully");
       window.location = "/";
 
     } catch (err) {
-      alert(err.response.data);
+      alert(err.response?.data || "Registration failed");
     }
   };
 
   return (
     <div className="auth-container">
-
       <form onSubmit={handleSubmit} className="auth-box">
-
         <h2>Register</h2>
 
         <input
@@ -53,9 +56,7 @@ function Register() {
         <button>Register</button>
 
         <p>Already have account? <a href="/">Login</a></p>
-
       </form>
-
     </div>
   );
 }
